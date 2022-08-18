@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_passwordless/data/services/auth/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  String get _username => 'username';
+  String get _username => auth.userName;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +36,8 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 50),
               ElevatedButton(
-                child: const Text('Sign Out'),
-                onPressed: () {},
+                onPressed: auth.signOut,
+                child: const Text("Sign Out"),
               ),
             ],
           ),
