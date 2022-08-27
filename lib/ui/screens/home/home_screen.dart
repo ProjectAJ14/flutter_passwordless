@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_passwordless/data/services/auth/auth_service.dart';
+import 'package:get/get.dart';
+
+import 'home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -8,6 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -36,7 +40,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 50),
               ElevatedButton(
-                onPressed: auth.signOut,
+                onPressed: controller.signOut,
                 child: const Text("Sign Out"),
               ),
             ],

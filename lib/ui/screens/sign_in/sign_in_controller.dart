@@ -1,11 +1,11 @@
-import 'dart:developer' as developer;
-
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_passwordless/ui/screens/home/home_screen.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/app_response.dart';
 import '../../../data/services/auth/auth_service.dart';
+import '../../../data/utils/app_logger.dart';
 import '../../../data/utils/validators.dart';
 import '../../utils/app_loader.dart';
 import '../../utils/info_alert.dart';
@@ -26,6 +26,11 @@ class SignInController extends GetxController with WidgetsBindingObserver {
   Future<void> onInit() async {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+      logger.d('onLink[${dynamicLinkData.link}]');
+    }).onError((error) {
+      logger.e('onLink.onError', error);
+    });
   }
 
   @override
@@ -40,17 +45,17 @@ class SignInController extends GetxController with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
-        developer.log('SignInController: resumed');
+        logger.d('SignInController: resumed');
         retrieveDynamicLinkAndSignIn(fromColdState: false);
         break;
       case AppLifecycleState.inactive:
-        developer.log('SignInController: inactive');
+        logger.d('SignInController: inactive');
         break;
       case AppLifecycleState.paused:
-        developer.log('SignInController: paused');
+        logger.d('SignInController: paused');
         break;
       case AppLifecycleState.detached:
-        developer.log('SignInController: detached');
+        logger.d('SignInController: detached');
         break;
     }
   }
@@ -65,8 +70,8 @@ class SignInController extends GetxController with WidgetsBindingObserver {
         if (appResponse.isSuccess) {
           infoDialog(
             title: 'Email Link Sent',
-            message:
-                'Passwordless sign-in link sent!\n Please check your inbox to complete sign in',
+            message: 'Passwordless sign-in link sent!\n'
+                'Please check your inbox to complete sign in',
           );
         } else {
           errorDialog(appResponse.message);
@@ -74,12 +79,8 @@ class SignInController extends GetxController with WidgetsBindingObserver {
       } else {
         errorDialog('Please enter required details');
       }
-    } catch (error, stackTrace) {
-      developer.log(
-        'signInWithEmailLink',
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, s) {
+      logger.d('signInWithEmailLink', e, s);
     } finally {
       AppLoader.hide();
     }
@@ -88,16 +89,20 @@ class SignInController extends GetxController with WidgetsBindingObserver {
   Future<void> retrieveDynamicLinkAndSignIn({
     required bool fromColdState,
   }) async {
-    developer.log('retrieveDynamicLinkAndSignIn');
-    AppResponse appResponse = await auth.retrieveDynamicLinkAndSignIn(
-      fromColdState: fromColdState,
-    );
-    if (appResponse.isNotFound) {
-      developer.log('retrieveDynamicLinkAndSignIn: not found');
-    } else if (appResponse.isSuccess) {
-      Get.offAll(() => const HomeScreen());
-    } else {
-      errorDialog(appResponse.message);
+    try {
+      logger.d('retrieveDynamicLinkAndSignIn');
+      AppResponse appResponse = await auth.retrieveDynamicLinkAndSignIn(
+        fromColdState: fromColdState,
+      );
+      if (appResponse.isNotFound) {
+        logger.d('retrieveDynamicLinkAndSignIn: not found');
+      } else if (appResponse.isSuccess) {
+        Get.off(() => const HomeScreen());
+      } else {
+        errorDialog(appResponse.message);
+      }
+    } catch (e, s) {
+      logger.d('retrieveDynamicLinkAndSignIn', e, s);
     }
   }
 }

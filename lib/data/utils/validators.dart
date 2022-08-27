@@ -1,6 +1,6 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
+
+import 'app_logger.dart';
 
 class ValidatorUtil {
   ValidatorUtil._();
@@ -17,11 +17,7 @@ class ValidatorUtil {
         return false;
       }
     } catch (error, stackTrace) {
-      developer.log(
-        '$formKey isFormValid',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      logger.e('$formKey isFormValid', error, stackTrace);
     }
     return false;
   }

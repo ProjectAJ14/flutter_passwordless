@@ -1,11 +1,11 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../../data/utils/app_logger.dart';
+
 class AppLoader {
   static Future<void> init() async {
-    developer.log('AppLoader: init');
+    logger.d('AppLoader: init');
     EasyLoading.instance
       ..indicatorSize = 45.0
       ..radius = 10.0
@@ -18,17 +18,17 @@ class AppLoader {
       ..maskColor = Colors.white.withOpacity(0.5);
 
     EasyLoading.addStatusCallback((status) {
-      developer.log('EasyLoading status[$status]');
+      logger.d('EasyLoading status[$status]');
     });
   }
 
   static Future<void> show({context, String? status}) async {
-    developer.log('show[$context]');
+    logger.d('show[$context]');
     await EasyLoading.show(status: status ?? "");
   }
 
   static Future<void> hide({context}) async {
-    developer.log('hide[$context]');
+    logger.d('hide[$context]');
     await EasyLoading.dismiss();
   }
 }

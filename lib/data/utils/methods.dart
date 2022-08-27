@@ -1,22 +1,21 @@
-import 'dart:developer' as developer;
-
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/services.dart';
 
+import 'app_logger.dart';
+
 String getExceptionMessage(
-  String id, {
-  String? message,
+  String? message, [
   dynamic error,
   StackTrace? stackTrace,
-}) {
+]) {
   String finalMessage = message ?? 'Something went wrong!';
 
   if (error != null) {
     ///LOG THE ERROR
-    developer.log(
-      'ERROR[$id][${error?.runtimeType}]',
-      error: error,
-      stackTrace: stackTrace,
+    logger.e(
+      'ERROR [${error?.runtimeType}]',
+      error,
+      stackTrace,
     );
     if (error is PlatformException) {
       if (error.message != null) {

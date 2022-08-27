@@ -24,6 +24,7 @@ infoDialog({
             : Get.theme.primaryTextTheme.bodyText1!.copyWith(
                 fontWeight: FontWeight.w400,
               ),
+        textAlign: TextAlign.center,
       ),
       actions: [
         TextButton(
