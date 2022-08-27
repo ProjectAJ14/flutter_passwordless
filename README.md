@@ -5,7 +5,7 @@
 What is password-less authentication?
 Passwordless is an authentication mechanism where a user’s digital identity is 
 verified with something other than a text-based password, i.e. user can log in 
-and access the system/platform without entering a password
+and access the system/platform without entering a password.
 
 
 Step 1: Create a Firebase project
